@@ -26,7 +26,11 @@
         id="modalBox"
         class="bg-white p-6 rounded-lg shadow-lg w-[400px] transform transition-all duration-300 scale-95 opacity-0"
       >
-        <h2 class="font-bold md-4 text-xl">Image Slider Modal</h2>
+        <h2 id="modalTitle" class="font-bold md-4 text-xl">
+          Image Slider Modal
+        </h2>
+
+        <!-- Image slider -->
         <div class="relative w-full overflow-hidden rounded-md">
           <img
             id="sliderImage"
@@ -38,14 +42,14 @@
           <!-- left and right button -->
           <button
             id="prevBtn"
-            class="top=1/2 absolute left-2 bg-gray-700 -translate-y-1/2 text-white px-3 py-1 rounded-full bg-opacity-60"
+            class="absolute top-1/2 left-2 -translate-y-1/2 bg-gray-700 bg-opacity-60 text-white px-3 py-1 rounded-full"
           >
             ‹
           </button>
 
           <button
             id="nextBtn"
-            class="top=1/2 absolute right-2 bg-gray-700 -translate-y-1/2 text-white px-3 py-1 rounded-full bg-opacity-60"
+            class="absolute top-1/2 right-2 -translate-y-1/2 bg-gray-700 bg-opacity-60 text-white px-3 py-1 rounded-full"
           >
             ›
           </button>
@@ -53,7 +57,7 @@
 
         <button
           id="closeBtn"
-          class="mt-4 px-4 bg-red-500 text-white rounded w-full"
+          class="mt-4 px-4 py-2 bg-red-500 text-white rounded w-full"
         >
           Close
         </button>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Practice</title>
+  </head>
+  <body class="p-8 transition-colors duration-300 bg-white text-black">
+    <h1 class="mb-4 font-bold text-2xl">Frontend Interactive class</h1>
+    <!-- Modal button -->
+    <button id="openBtn" class="px-4 py-2 bg-blue-600 text-white rounded">
+      Open Modal
+    </button>
+
+    <!-- modal -->
+
+    <div
+      id="modal"
+      class="hidden fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modalTittle"
+    >
+      <div
+        id="modalBox"
+        class="bg-white p-6 rounded-lg shadow-lg w-[400px] transform transition-all duration-300 scale-95 opacity-0"
+      >
+        <h2 class="font-bold md-4 text-xl">Image Slider Modal</h2>
+        <div class="relative w-full overflow-hidden rounded-md">
+          <img
+            id="sliderImage"
+            src="https://picsum.photos/id/1011/400/250"
+            alt="slider Image"
+            class="w-full h-64 object-cover rounded-md transition-all duration-300"
+          />
+
+          <!-- left and right button -->
+          <button
+            id="prevBtn"
+            class="top=1/2 absolute left-2 bg-gray-700 -translate-y-1/2 text-white px-3 py-1 rounded-full bg-opacity-60"
+          >
+            ‹
+          </button>
+
+          <button
+            id="nextBtn"
+            class="top=1/2 absolute right-2 bg-gray-700 -translate-y-1/2 text-white px-3 py-1 rounded-full bg-opacity-60"
+          >
+            ›
+          </button>
+        </div>
+
+        <button
+          id="closeBtn"
+          class="mt-4 px-4 bg-red-500 text-white rounded w-full"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </body>
+  <script src="script.js"></script>
+</html>

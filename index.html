@@ -13,6 +13,41 @@
       Open Modal
     </button>
 
+    <!-- Toggle -->
+
+    <div class="mt-6 flex items-center gap-2">
+      <span>Light mode</span>
+      <button
+        id="toggleTheme"
+        class="relative w-12 h-6 bg-gray-300 rounded-full transition"
+        role="switch"
+        aria-checked="false"
+      >
+        <span
+          id="toggleCircle"
+          class="absolute top-0 left-0 w-6 h-6 bg-white rounded-full shadow transform transition"
+        ></span>
+      </button>
+
+      <span>Dark mode</span>
+    </div>
+
+    <!-- Font size Slider -->
+
+    <div>
+      <label></label>
+      <input
+        type="range"
+        id="fontSlider"
+        min="12"
+        max="32"
+        value="20"
+        class="w-64"
+      />
+
+      <p id="sliderText">This is the text i want to change on range</p>
+    </div>
+
     <!-- modal -->
 
     <div
@@ -64,5 +99,6 @@
       </div>
     </div>
   </body>
+  <footer></footer>
   <script src="script.js"></script>
 </html>

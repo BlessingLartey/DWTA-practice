@@ -61,3 +61,52 @@ const sliderText = document.getElementById("sliderText");
 fontSlider.addEventListener("click", () => {
   sliderText.style.fontSize = fontSlider.value + "px";
 });
+
+// Create new items on list
+const addBtn = document.getElementById("addItem");
+const list = document.getElementById("list");
+const input = document.getElementById("taskInput");
+
+age = 45;
+
+if (age >= 23) {
+  alert("You're no longer young");
+} else {
+  alert("You're still young");
+}
+
+addBtn.addEventListener("click", () => {
+  const task = input.value.trim();
+  if (task === "") return alert("please enter a task!");
+
+  // Create list here
+  const li = document.createElement("li");
+  li.className =
+    "flex justify-between items-center bg-gray-50 p-2 rounded-lg shadow-sm";
+
+  const span = document.createElement("span");
+  span.textContent = task;
+  span.className = "flex-grow cursor-pointer";
+  span.addEventListener("click", () => {
+    span.classList.toggle("line-through");
+    span.classList.toggle("text-gray-400");
+  });
+
+  // Create Element
+  // const li = document.createElement("li");
+  // li.textContent = "New item added!";
+  // document.getElementById("list").appendChild(li);
+
+  const delBtn = document.createElement("button");
+  delBtn.textContent = "✕";
+  delBtn.className = "ml-2 text-red-500 hover:text-red-700 font-bold text-lg";
+  // delBtn.src = "https://.0.0.1:500/9000/"
+  // delBtn.id = "delBtn"
+  delBtn.addEventListener("click", () => li.remove());
+
+  li.appendChild(span);
+  li.appendChild(delBtn);
+  list.appendChild(li);
+
+  input.value = ""; // clear input
+});

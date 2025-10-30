@@ -1,14 +1,30 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TodoItem from "./TodoItem.jsx";
 import "./App.css";
 
 function App() {
   const [input, setInput] = useState("");
   const [title, setTitle] = useState("");
-  const [tasks, setTasks] = useState([]);
-
+  // const [tasks, setTasks] = useState([]);
   // Edit
   const [editingTaskId, setEditingTaskId] = useState(null);
+
+  // const [count, setCount] = useState(0);
+
+  // useEffect(() => {
+  //   console.log("Count has change:", count);
+  // }, [count]);
+
+  const LOCAL_STORAGE_KEY = "task-list";
+
+  const [tasks, setTasks] = useState(() => {
+    const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(tasks));
+  }, [tasks]);
 
   const addTask = () => {
     if (input.trim() === "") return;
@@ -90,6 +106,11 @@ function App() {
           />
         ))}
       </ul>
+
+      {/* <div>
+        <p>Count: {count}</p>
+        <button onClick={() => setCount(count + 1)}>Add</button>
+      </div> */}
     </div>
   );
 }

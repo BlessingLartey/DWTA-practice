@@ -2,57 +2,48 @@ import React from "react";
 
 function TodoItem({ task, deleteTask, toggleDone, editProps }) {
   return (
-    <li
-      style={{
-        margin: "10px 0",
-        padding: "10px",
-        borderRadius: "8px",
-        background: "#fff",
-        boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "flex-start",
-      }}
-    >
+    <li className="bg-white shadow-md rounded-xl p-4 my-3 flex flex-col gap-3 transition hover:shadow-lg">
+      {/* Task Title */}
       <h3
-        style={{
-          textDecoration: task.done ? "line-through" : "none",
-          color: task.done ? "gray" : "black",
-          marginBottom: "4px",
-        }}
+        className={`text-lg font-semibold ${
+          task.done ? "line-through text-gray-400" : "text-gray-800"
+        }`}
       >
-        {task.title}: {task.body}
+        {task.title}
       </h3>
 
-      <p style={{ margin: "4px 0 10px 0" }}>{task.body}</p>
-      <div>
+      {/* Task Body */}
+      <p
+        className={`text-sm ${
+          task.done ? "text-gray-400 italic" : "text-gray-600"
+        }`}
+      >
+        {task.body}
+      </p>
+
+      {/* Action Buttons */}
+      <div className="flex flex-wrap items-center gap-3 mt-2">
         <button
           onClick={() => toggleDone(task.id)}
-          style={{
-            backgroundColor: task.done ? "#ffc107" : "#28a745",
-            color: "white",
-            border: "none",
-            padding: "6px 10px",
-            borderRadius: "5px",
-            marginRight: "8px",
-            cursor: "pointer",
-          }}
+          className={`px-4 py-2 rounded-lg text-sm font-medium text-white transition-colors duration-200 ${
+            task.done
+              ? "bg-yellow-500 hover:bg-yellow-400"
+              : "bg-green-600 hover:bg-green-500"
+          }`}
         >
           {task.done ? "Undo" : "Done"}
         </button>
 
-        <button onClick={() => editProps(task.id)}>Edit</button>
+        <button
+          onClick={() => editProps(task.id)}
+          className="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 text-white hover:bg-blue-500 transition-colors duration-200"
+        >
+          Edit
+        </button>
 
         <button
           onClick={() => deleteTask(task.id)}
-          style={{
-            backgroundColor: "#dc3545",
-            color: "white",
-            border: "none",
-            padding: "6px 10px",
-            borderRadius: "5px",
-            cursor: "pointer",
-          }}
+          className="px-4 py-2 rounded-lg text-sm font-medium bg-red-600 text-white hover:bg-red-500 transition-colors duration-200"
         >
           Delete
         </button>

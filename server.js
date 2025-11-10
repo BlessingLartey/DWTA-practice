@@ -1,9 +1,14 @@
 const express = require("express");
 
+const mongoose = require("mongoose");
+
 const app = express();
 const PORT = 3000;
 
 app.use(express.json());
+
+// connecting to our mongodb
+mongoose.connect("");
 
 app.use((req, res, next) => {
   console.log(`${req.method} request made to ${req.url}`);

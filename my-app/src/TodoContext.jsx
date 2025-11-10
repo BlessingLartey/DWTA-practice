@@ -29,3 +29,5 @@ export function TodoContextProvider({ children }) {
     </TodoContext.Provider>
   );
 }
+
+export { TodoContext };

@@ -1,13 +1,60 @@
 const User = require("../models/User");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+
 
 exports.createUser = async(req, res) => {
   try{
-    const {name, age} = req.body;
-    const newUser = new User({name, age});
+    const {name, age, email, password} = req.body;
+
+    //check if fields are filled
+    if (!name || !age || !email || !password ) { return res.status(400).send("Fields are required")} 
+
+    //Does user exist?
+    const exist = await User.findOne({email});
+    if (exist) { return res.status(400).send("Email exists or in use")}
+
+    //bcrypt useage
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    //save user now
+    const newUser = new User({name, age, email, password: hashedPassword});
     await newUser.save();
+
     res.status(201).json({message: "User added succesfully!", user: newUser});
   } catch(error){
     res.status(500).send("Error adding user: " + error.message);
+  }
+};
+
+exports.login = async() => {
+  try{
+    const {email, password } = req.body;
+
+     //check if fields are filled
+    if (!email || !password ) { return res.status(400).send("Fields are required")} 
+
+    //Does user exist?
+    const user = await User.findOne({email});
+    if (!user) { return res.status(400).send("Email does not exist or in use")}
+
+    //compare password with bcrypt
+    const match = await bcrypt.compare(password, user.password);
+
+    if (!match){
+      return res.status(400).send("Invalid")
+    }
+
+    //create jwt token
+    const token = jwt.sign(
+      {id: user._id},
+      process.env.JWT_SECRET,
+      {expiresIn: "5h"}
+    );
+    res.json({message: "Login successful", token})
+
+  } catch (error){
+    res.status(500).send("Login error: " + error.message)
   }
 };
 

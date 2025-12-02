@@ -1,105 +1,137 @@
 const User = require("../models/User");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+const generateToken = require("../utils/generateToken");
 
-exports.createUser = async (req, res) => {
+// =============================
+// REGISTER USER
+// =============================
+
+exports.registerUser = async (req, res) => {
+  const { name, email, password } = req.body;
+
   try {
-    const { name, age, email, password } = req.body;
-
-    //check if fields are filled
-    if (!name || !age || !email || !password) {
-      return res.status(400).send("Fields are required");
+    // Check if user exists
+    const userExists = await User.findOne({ email });
+    if (userExists) {
+      return res.status(400).json({ message: "User already exists" });
     }
 
-    //Does user exist?
-    const exist = await User.findOne({ email });
-    if (exist) {
-      return res.status(400).send("Email exists or in use");
-    }
+    // Create new user
+    const user = await User.create({ name, email, password });
 
-    //bcrypt usage
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    //save user now
-    const newUser = new User({ name, age, email, password: hashedPassword });
-    await newUser.save();
-
-    res.status(201).json({ message: "User added successfully!", user: newUser });
+    return res.status(201).json({
+      message: "User registered successfully",
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+      },
+      token: generateToken(user._id),
+    });
   } catch (error) {
-    res.status(500).send("Error adding user: " + error.message);
+    console.log("Registration Error:", error);
+    return res.status(500).json({ message: "Server Error" });
   }
 };
+
+// =============================
+// LOGIN USER
+// =============================
 
 exports.login = async (req, res) => {
+  const { email, password } = req.body;
+
   try {
-    const { email, password } = req.body;
-
-    //check if fields are filled
+    // Check if all fields are provided
     if (!email || !password) {
-      return res.status(400).send("Fields are required");
+      return res.status(400).json({ message: "All fields are required" });
     }
 
-    //Does user exist?
+    // Find user by email
     const user = await User.findOne({ email });
+
     if (!user) {
-      return res.status(400).send("Email does not exist or in use");
+      return res.status(400).json({ message: "Invalid email or password" });
     }
 
-    //compare password with bcrypt
-    const match = await bcrypt.compare(password, user.password);
+    // Compare password using model method
+    const isMatch = await user.matchPassword(password);
 
-    if (!match) {
-      return res.status(400).send("Invalid");
+    if (!isMatch) {
+      return res.status(401).json({ message: "Invalid email or password" });
     }
 
-    //create jwt token
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "5h",
+    // SUCCESS
+    return res.status(200).json({
+      message: "Login successful",
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+      },
+      token: generateToken(user._id),
     });
-    res.json({ message: "Login successful", token });
+
   } catch (error) {
-    res.status(500).send("Login error: " + error.message);
+    console.log("Login Error:", error);
+    return res.status(500).json({ message: "Server Error" });
   }
 };
+
+
+// =============================
+// GET ALL USERS
+// =============================
 
 exports.getUsers = async (req, res) => {
   try {
-    const users = await User.find();
-    res.json(users);
+    const users = await User.find().select("-password");
+    return res.status(200).json(users);
   } catch (error) {
-    res.status(500).send("Error fetching users: " + error.message);
+    return res.status(500).json({ message: "Server Error" });
   }
 };
+
+// =============================
+// GET USER BY ID
+// =============================
 
 exports.getUserById = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
-    if (!user) return res.status(404).send("User not found!");
-    res.json(user);
+    const user = await User.findById(req.params.id).select("-password");
+
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    return res.status(200).json(user);
   } catch (error) {
-    res.status(500).send("Error fetching users: " + error.message);
+    return res.status(500).json({ message: "Server Error" });
   }
 };
 
+// =============================
+// UPDATE USER
+// =============================
+
 exports.updateUsers = async (req, res) => {
-  const { id } = req.params;
-  const updatedData = req.body;
+  const { name, email } = req.body;
 
   try {
-    let user = await User.findById(id);
+    const user = await User.findById(req.params.id);
+    if (!user) return res.status(404).json({ message: "User not found" });
 
-    if (!user) {
-      return res.status(404).send("User not found!");
-    }
+    user.name = name || user.name;
+    user.email = email || user.email;
 
-    Object.assign(user, updatedData);
-    await user.save();
+    const updatedUser = await user.save();
 
-    res.status(200).json({
-      message: `User with ID ${id} updated.`,
-      user,
+    return res.status(200).json({
+      message: "User updated successfully",
+      user: {
+        id: updatedUser._id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+      },
     });
   } catch (error) {
-    res.status(500).send("Error updating user: " + error.message);
+    return res.status(500).json({ message: "Server Error" });
   }
 };

@@ -1,5 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const cors = require("cors");
+
 require ("dotenv").config(); //helps us connect to our variables in .env
 
 const userRoutes = require("./routes/userRoutes");
@@ -7,6 +9,8 @@ const userRoutes = require("./routes/userRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 4000;
+
+app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 
 app.use(express.json());
 
